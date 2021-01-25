@@ -1,4 +1,5 @@
 /**
+ * Autor - Ibai Andreu
  * Punto de entrada a la aplicación
  */
 public class TestGestorFaltas {
@@ -8,7 +9,7 @@ public class TestGestorFaltas {
      * (ver enunciado)
      */
     public static void main(String[] args) {
-        
+ 
     }
 
 }

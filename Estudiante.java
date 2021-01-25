@@ -1,9 +1,10 @@
 /**
  * Un objeto de esta clase guarda la información de un estudiante
- *
+ *  Autor - Ibai Andreu
  */
 public class Estudiante {
     private final static String SEPARADOR = ",";
+    private final static String ESPACIO = " ";
     private String nombre;
     private String apellidos;
     private int faltasNoJustificadas;
@@ -17,8 +18,26 @@ public class Estudiante {
      *  
      */
     public Estudiante(String lineaDatos) {
-         
+         String[] datos = lineaDatos.split(SEPARADOR);
+         this.nombre = nombre(datos[0]);
+         this.apellidos = datos[1].toUpperCase();
+         this.faltasNoJustificadas = Integer.parseInt(datos[2]);
+         this.faltasJustificadas = Integer.parseInt(datos[3]);
+    }
 
+    /**
+     * 
+     */
+    private String nombre(String nombre) {
+        if(nombre.contains(ESPACIO)){
+            String[] nombreAcortado = nombre.split(ESPACIO);
+            String nombreMayusculas = "null";
+            for(int i = 0; i < nombreAcortado.length; i++){
+                nombreMayusculas += nombreAcortado[i].substring(0,1).toUpperCase();
+            }
+            return nombreMayusculas;
+        }
+        return nombre;
     }
 
 

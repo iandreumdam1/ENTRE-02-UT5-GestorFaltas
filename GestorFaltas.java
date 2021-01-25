@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
+ * Autor - Ibai Andreu
  * Un objeto de esta clase permite registrar estudiantes de un
  * curso (leyendo la información de un fichero de texto) y 
  * emitir listados con las faltas de los estudiantes, justificar faltas, 
@@ -10,10 +11,11 @@ import java.util.Scanner;
  *
  */
 public class GestorFaltas {
-     
+    private Estudiante[] estudiantes;
+    private int total;
 
     public GestorFaltas(int n) {
-         
+         estudiantes = new Estudiante[n];
     }
 
     /**
@@ -21,7 +23,7 @@ public class GestorFaltas {
      * false en otro caso
      */
     public boolean cursoCompleto() {
-        return false;
+        return total >= estudiantes.length;
     }
 
     /**
@@ -37,8 +39,22 @@ public class GestorFaltas {
      *    
      */
     public void addEstudiante(Estudiante nuevo) {
-        
-
+         if(!cursoCompleto()){
+             if(buscarEstudiante(nuevo.getApellidos()) == -1){
+               for(int i = 0; i < total; i++){
+                   estudiantes[i].setApellidos(nuevo.getApellidos());
+               }
+            }
+            else{
+               System.out.println("No se puede añadir el alumno. Nombre repetido."); 
+            }
+        }
+        else if(!cursoCompleto() && buscarEstudiante(nuevo.getApellidos()) >= 0){
+            System.out.println("No se puede añadir el alumno. Curso completo y nombre repetido.");
+        } 
+        else{
+            System.out.println("No se puede añadir el alumno. Curso completo.");
+        }
     }
 
 
@@ -51,8 +67,22 @@ public class GestorFaltas {
      *  
      */
     public int buscarEstudiante(String apellidos) {
-         
-        return 0;
+        int encontrado = -1;
+        int izquierda = 0;
+        int derecha = total;
+        while (izquierda <= derecha){
+            int mitad = (izquierda + derecha) / 2;
+            if (estudiantes[mitad].getApellidos().compareTo(apellidos) < 0){
+                encontrado = mitad;
+            }
+            else if (estudiantes[mitad].getApellidos().compareTo(apellidos) > 0){
+                derecha = mitad - 1;                
+            }
+            else{
+                izquierda = mitad + 1;
+            }
+        }
+        return encontrado;
     }
 
     /**
@@ -61,8 +91,11 @@ public class GestorFaltas {
      *  
      */
     public String toString() {
-        
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < total; i++){
+            sb.append(estudiantes[i].toString()).append("\t");
+        }
+        return sb.toString();
 
     }
 
@@ -75,7 +108,10 @@ public class GestorFaltas {
      *  justificar también)
      */
     public void justificarFaltas(String apellidos, int faltas) {
-         
+        estudiantes[buscarEstudiante(apellidos)].justificar(faltas);
+        System.out.println("Al alumno" + estudiantes[buscarEstudiante(apellidos)].getNombre() + 
+        estudiantes[buscarEstudiante(apellidos)].getApellidos() + 
+        "Se le han justificado " + faltas + " faltas.");
 
     }
 
@@ -85,7 +121,19 @@ public class GestorFaltas {
      * Método de selección directa
      */
     public void ordenar() {
-        
+      // Estudiante[] estudiantes = new Estudiante[total];
+      // System.arraycopy(estudiantes, 0, total);
+        // for (int i = 0; i < total - 1; i++){
+            // int posmin = i;
+            // for(int j = i + 1; j < total; j++){
+                // if(estudiantes[j].getFaltasNoJustificadas().compareTo(estudiantes[posmin].getFaltasNoJustificadas())>=0){
+                    // posmin = j;
+                // }
+            // }
+            // int aux = estudiantes[posmin];
+            // estudiantes[posmin] = estudiantes[i];
+            // estudiantes[i] = aux;
+        // }
 
     }
 
@@ -94,7 +142,11 @@ public class GestorFaltas {
      * aquellos estudiantes con 30 o más faltas injustificadas
      */
     public void anularMatricula() {
-         
+         for(int i = 0; i < total; i++){
+             if (estudiantes[i].getFaltasNoJustificadas() >= 30){
+                 estudiantes[i - 1] = estudiantes[i];
+             }
+         }
 
     }
 
